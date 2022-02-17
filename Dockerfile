@@ -17,6 +17,7 @@ RUN apt-get update \
      curl \
      pciutils \
      zip \
+     git \
   && apt-get clean \
   && apt-get autoremove --yes \
   && rm -rf /var/lib/apt/lists/*
@@ -25,11 +26,12 @@ RUN apt-get update \
 RUN useradd -m -d ${TIZEN_HOME_DIR:?} tizen
 USER tizen
 
+# use local tizen sdk download if available, otherwise download it
 COPY --chown=tizen /vendor /tizen/
-
 RUN export installer=$(find /tizen -type f -name "web-cli_*ubuntu-*.bin") \
   && ([ -n "$installer" ] && (mv -v $installer ${TIZEN_SDK_CLI_INSTALLER_PATH} || true)) || curl -s ${TIZEN_SDK_CLI_INSTALLER_URL} > ${TIZEN_SDK_CLI_INSTALLER_PATH}
 
+# install tizen sdk
 RUN mkdir -p ${TIZEN_SDK_PATH:?} \
   && chmod +x ${TIZEN_SDK_CLI_INSTALLER_PATH:?} \
   && ${TIZEN_SDK_CLI_INSTALLER_PATH:?} --no-java-check --accept-license ${TIZEN_SDK_PATH:?} \
