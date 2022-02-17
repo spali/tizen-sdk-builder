@@ -29,7 +29,7 @@ USER tizen
 COPY --chown=tizen /vendor /tizen/
 
 RUN export installer=$(find /tizen -type f -name "web-cli_*ubuntu-*.bin") \
-  && ([ -n "$installer" ] && (mv -v $installer ${TIZEN_SDK_CLI_INSTALLER_PATH} || true)) || curl ${TIZEN_SDK_CLI_INSTALLER_URL} > ${TIZEN_SDK_CLI_INSTALLER_PATH}
+  && ([ -n "$installer" ] && (mv -v $installer ${TIZEN_SDK_CLI_INSTALLER_PATH} || true)) || curl -s ${TIZEN_SDK_CLI_INSTALLER_URL} > ${TIZEN_SDK_CLI_INSTALLER_PATH}
 
 RUN mkdir -p ${TIZEN_SDK_PATH:?} \
   && chmod +x ${TIZEN_SDK_CLI_INSTALLER_PATH:?} \
